@@ -1,0 +1,64 @@
+#include<iostream>
+#include<fstream>
+#include<string>
+#include<sstream>
+#include<vector>
+#include<iomanip> //untuk setw
+
+using namespace std;
+
+struct Siswa {
+	int nomor;
+	string nama;
+	int nilai;
+
+};
+int main() {
+	vector<Siswa> daftarSiswa;
+
+	//1. membuka file
+	ifstream fileku("bacaAku.txt");
+
+	//2. apakah file bisa dibuka
+	if (!fileku.is_open()) {
+		cout << "file gagal dbuka";
+		return 1;
+	}
+	//3. membuka file perbaris
+	string baris;
+	while (getline(fileku, baris)) {
+		//melewati baris kosong
+		if (baris.empty()) continue;
+
+		Siswa s;
+		stringstream ss(baris);
+
+		string token;
+
+		//nampilkan nomor
+		getline(ss, token, ';');
+		s.nomor = stoi(token);
+
+		//nampilkan nama
+		getline(ss, s.nama, ';');
+
+		//nampilkan nilai
+		getline(ss, token, ';');
+		s.nilai = stoi(token);
+
+		//4. simpan kevector
+		daftarSiswa.push_back(s);
+	}
+
+	fileku.close();
+
+	//5. tampilkan data
+	cout << "\nData siswa:\n";
+	for (const auto& student : daftarSiswa) {
+		cout << left
+			<< setw(6) << student.nomor
+			<< setw(15) << student.nama
+			<< setw(8) << student.nilai << "\n";
+	}
+	return 0;
+}
